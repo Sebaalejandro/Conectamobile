@@ -31,13 +31,14 @@ import java.util.List;
 public class SlideshowFragment extends Fragment {
 
     private FragmentSlideshowBinding binding;
-    private FirebaseAuth auth;
-    private FirebaseFirestore db;
-    private FirebaseStorage storage;
-    private RecyclerView recyclerView;
-    private ContactAdapter adapter;
-    private List<Contacto> contactList;
+    private FirebaseAuth auth; // Autenticación de Firebase
+    private FirebaseFirestore db; // Base de datos Firestore
+    private FirebaseStorage storage; // Almacenamiento de Firebase
+    private RecyclerView recyclerView; // Vista para mostrar la lista de contactos
+    private ContactAdapter adapter; // Adaptador para mostrar los contactos
+    private List<Contacto> contactList; // Lista de contactos
 
+    // Método para crear la vista y configurar los elementos necesarios
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inicializar ViewBinding
         binding = FragmentSlideshowBinding.inflate(inflater, container, false);
@@ -50,7 +51,7 @@ public class SlideshowFragment extends Fragment {
 
         // Inicialización del RecyclerView
         recyclerView = binding.recyclerViewContacts;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Configurar el LayoutManager
 
         // Configuración del adaptador sin la opción de eliminar
         adapter = new ContactAdapter(contactList);
@@ -58,7 +59,7 @@ public class SlideshowFragment extends Fragment {
         // Manejar el clic en el contacto para abrir el chat
         adapter.setOnContactClickListener(contact -> openChat(contact));
 
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter); // Asignar el adaptador al RecyclerView
 
         // Configurar el botón para verificar el correo
         binding.buttonAddContact.setOnClickListener(v -> checkIfEmailExists());
@@ -266,16 +267,18 @@ public class SlideshowFragment extends Fragment {
                         // Notificar al adaptador que se ha actualizado la lista
                         adapter.notifyDataSetChanged();
                         if (contactList.isEmpty()) {
-                            Toast.makeText(getContext(), "No tienes contactos guardados.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "No tienes contactos.", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(e -> {
-                        // Mostrar mensaje de error si no se puede cargar los contactos
                         Toast.makeText(getContext(), "Error al cargar los contactos.", Toast.LENGTH_SHORT).show();
                     });
-        } else {
-            // Mostrar un mensaje si no hay usuario autenticado
-            Toast.makeText(getContext(), "No se pudo obtener el usuario.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

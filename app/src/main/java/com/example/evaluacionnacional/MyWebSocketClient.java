@@ -7,10 +7,10 @@ import android.util.Log;
 
 public class MyWebSocketClient extends WebSocketClient {
 
-    private static final String TAG = "WebSocket";
+    private static final String TAG = "WebSocket";  // Etiqueta para los logs
 
     public MyWebSocketClient(URI serverUri) {
-        super(serverUri);
+        super(serverUri);  // Inicializar WebSocket con la URI del servidor
     }
 
     @Override

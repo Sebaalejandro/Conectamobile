@@ -40,47 +40,45 @@ public class Homelogin extends AppCompatActivity {
 
         setSupportActionBar(binding.appBarHomelogin.toolbar);
 
-
-
-        // Configuración de la barra lateral (Navigation Drawer)
+        // Configuración del cajón de navegación (Navigation Drawer)
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
-        // Configuración de la navegación con NavController y AppBarConfiguration
+        // Definición de la configuración de la barra de navegación
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
 
-
-        // Obtener el NavController para gestionar la navegación entre fragmentos
+        // Obtención del NavController para manejar la navegación entre fragmentos
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_homelogin);
 
-        // Configuración de la barra de navegación
+        // Vinculación de la barra de navegación con el controlador de navegación
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Inicializar FirebaseAuth y FirebaseStorage
+        // Inicialización de FirebaseAuth y FirebaseStorage
         mAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        // Mostrar los datos del usuario en el NavigationView
+        // Mostrar los detalles del usuario en el menú de navegación
         displayUserInfo(navigationView);
 
-        // Agregar listener para manejar el "Cerrar sesión"
+        // Listener para manejar el evento de cerrar sesión
         navigationView.setNavigationItemSelectedListener(item -> {
             // Si el usuario selecciona "Cerrar sesión"
             if (item.getItemId() == R.id.nav_cerrarsesion) {
-                signOut(); // Cerrar sesión
+                signOut(); // Realiza la acción de cerrar sesión
                 return true;
             }
-            // La navegación entre los fragmentos será gestionada automáticamente por NavController
+            // La navegación entre los fragmentos será manejada automáticamente por el NavController
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
     }
 
     // Mostrar la información del usuario en el NavigationView
     private void displayUserInfo(NavigationView navigationView) {
+        // Obtener la vista del encabezado del NavigationView
         View headerView = navigationView.getHeaderView(0);
         TextView userNameTextView = headerView.findViewById(R.id.userNameTextView);
         TextView userEmailTextView = headerView.findViewById(R.id.userEmailTextView);
@@ -88,7 +86,7 @@ public class Homelogin extends AppCompatActivity {
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            // Mostrar el correo
+            // Mostrar el correo electrónico del usuario
             String email = user.getEmail();
             userEmailTextView.setText(email);
 
@@ -100,40 +98,40 @@ public class Homelogin extends AppCompatActivity {
                 userNameTextView.setText("Usuario");
             }
 
-            // Cargar la foto desde Firebase Storage usando el UID
+            // Cargar la foto de perfil desde Firebase Storage usando el UID
             loadProfileImage(user.getUid(), userImageView);
         }
     }
 
-    // Cargar la imagen del perfil desde Firebase Storage
+    // Cargar la imagen de perfil desde Firebase Storage
     private void loadProfileImage(String uid, ImageView imageView) {
         if (uid == null) return;
 
-        // Referencia a la foto en Firebase Storage usando el UID
+        // Referencia a la imagen del perfil en Firebase Storage usando el UID
         StorageReference profileImageRef = firebaseStorage.getReference()
                 .child("profile_pics/" + uid + ".jpg");
 
-        // Obtener URL de descarga y cargar la imagen con Picasso
+        // Obtener la URL de descarga y cargar la imagen con Picasso
         profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            // Usar Picasso para cargar la imagen
+            // Usar Picasso para cargar la imagen desde la URI obtenida
             Picasso.get()
-                    .load(uri)    // Cargar la imagen desde la URI obtenida
-                    .placeholder(R.drawable.usuario)  // Imagen mientras se carga
-                    .error(R.drawable.usuario)       // Imagen si hay error
+                    .load(uri)    // Cargar la imagen desde la URI
+                    .placeholder(R.drawable.usuario)  // Imagen de espera mientras se carga
+                    .error(R.drawable.usuario)       // Imagen si hay error al cargar
                     .into(imageView);  // Asignar la imagen al ImageView
 
         }).addOnFailureListener(e -> {
-            // Mostrar un mensaje en caso de error
+            // Mostrar un mensaje de error si ocurre algún problema
             Toast.makeText(this, "Error al cargar la imagen de perfil", Toast.LENGTH_SHORT).show();
         });
     }
 
     // Método para cerrar sesión
     private void signOut() {
-        // Cerrar sesión del usuario
+        // Cerrar la sesión del usuario en Firebase
         FirebaseAuth.getInstance().signOut();
 
-        // Redirigir al usuario a la pantalla de inicio de sesión (o cualquier otra actividad que desees)
+        // Redirigir al usuario a la pantalla de inicio de sesión o cualquier otra actividad
         Intent intent = new Intent(Homelogin.this, MainActivity.class); // Cambia a tu actividad de login
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -150,7 +148,7 @@ public class Homelogin extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        // Gestionar la navegación cuando se presiona el botón de "Up"
+        // Manejo de la navegación al presionar el botón de "Up"
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_homelogin);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }

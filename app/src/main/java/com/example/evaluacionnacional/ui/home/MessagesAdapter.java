@@ -15,49 +15,45 @@ import java.util.Locale;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
 
-    private List<Message> messages;
+    private List<Message> messages; // Lista de mensajes
 
-    // Constructor para recibir la lista de mensajes
+    // Constructor para inicializar la lista
     public MessagesAdapter(List<Message> messages) {
         this.messages = messages;
     }
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Inflar el layout de cada item (mensaje)
+        // Infla el layout del mensaje
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_message, parent, false); // 'item_message' es el layout para cada mensaje
+                .inflate(R.layout.item_message, parent, false);
         return new MessageViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
-        // Obtener el mensaje para esta posición
+        // Vincula los datos del mensaje a las vistas
         Message message = messages.get(position);
-
-        // Asignar los valores a los elementos de la vista
-        holder.messageContent.setText(message.getContent()); // Cambiar getMessageContent() por getContent()
+        holder.messageContent.setText(message.getContent());
         holder.sender.setText(message.getSender());
 
-        // Formatear y mostrar la hora del mensaje
+        // Formatea y muestra la hora
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         holder.timestamp.setText(sdf.format(message.getTimestamp()));
     }
 
-
     @Override
     public int getItemCount() {
-        return messages.size(); // Retorna el tamaño de la lista de mensajes
+        return messages.size(); // Tamaño de la lista
     }
 
-    // ViewHolder que se usa para cada item del RecyclerView
+    // ViewHolder para manejar las vistas de cada mensaje
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageContent, sender, timestamp;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
-            // Inicializa las vistas
+            // Inicializa los componentes
             messageContent = itemView.findViewById(R.id.textViewMessageContent);
             sender = itemView.findViewById(R.id.textViewSender);
             timestamp = itemView.findViewById(R.id.textViewTimestamp);

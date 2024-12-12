@@ -12,58 +12,59 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class recuperacionCon extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private EditText emailEditText;
-    private Button sendButton;
-    private TextView backToLoginTextView;
+    private FirebaseAuth mAuth;  // Instancia de FirebaseAuth para manejar la autenticación
+    private EditText emailEditText;  // Campo de texto para ingresar el correo electrónico
+    private Button sendButton;  // Botón para enviar la solicitud de restablecimiento de contraseña
+    private TextView backToLoginTextView;  // Texto que permite al usuario volver a la pantalla de inicio de sesión
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recuperacion_con);
 
-        // Inicializar FirebaseAuth
+        // Inicialización de FirebaseAuth para poder interactuar con el sistema de autenticación
         mAuth = FirebaseAuth.getInstance();
 
-        // Asociar vistas
+        // Asociar las vistas con las variables correspondientes
         emailEditText = findViewById(R.id.emailEditText);
         sendButton = findViewById(R.id.sendButton);
         backToLoginTextView = findViewById(R.id.backToLoginTextView);
 
-        // Configurar el botón "Enviar"
+        // Configuración del botón de "Enviar" para que ejecute el proceso de envío del correo de restablecimiento
         sendButton.setOnClickListener(v -> sendPasswordResetEmail());
 
-        // Configurar el texto "Volver a iniciar sesión"
+        // Configuración de la opción "Volver a iniciar sesión" que permite cerrar la actividad actual
         backToLoginTextView.setOnClickListener(v -> {
-            // Aquí puedes agregar la lógica para volver a la pantalla de inicio de sesión
-            finish(); // Si prefieres simplemente cerrar esta actividad
+            // El comportamiento aquí es simplemente cerrar esta actividad y regresar a la anterior
+            finish();
         });
     }
 
-    // Método para enviar el correo de restablecimiento de contraseña
+    // Método que maneja el proceso de envío de un correo de restablecimiento de contraseña
     private void sendPasswordResetEmail() {
-        String email = emailEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();  // Obtener el correo ingresado
 
-        // Validar el correo electrónico
+        // Validar si el correo ingresado no está vacío
         if (email.isEmpty()) {
-            emailEditText.setError("Por favor ingresa un correo electrónico");
+            emailEditText.setError("Por favor ingresa un correo electrónico");  // Mostrar error si está vacío
             return;
         }
 
+        // Validar que el correo contenga un "@" para asegurarse de que es un formato válido
         if (!email.contains("@")) {
-            emailEditText.setError("Por favor ingresa un correo electrónico válido");
+            emailEditText.setError("Por favor ingresa un correo electrónico válido");  // Mostrar error si no es válido
             return;
         }
 
-        // Enviar el correo de restablecimiento de contraseña
+        // Enviar el correo de restablecimiento de contraseña a través de Firebase
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Mostrar mensaje de éxito
+                        // Si la operación fue exitosa, mostrar un mensaje de confirmación al usuario
                         Toast.makeText(recuperacionCon.this, "Correo de restablecimiento enviado", Toast.LENGTH_SHORT).show();
-                        finish(); // Puedes cerrar la actividad o redirigir al login
+                        finish();  // Cerrar la actividad o redirigir a la pantalla de inicio de sesión
                     } else {
-                        // Mostrar mensaje de error
+                        // Si la operación falla, mostrar el mensaje de error
                         Toast.makeText(recuperacionCon.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });

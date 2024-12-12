@@ -34,7 +34,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        // Inflar el layout para este fragmento
+        // Inflar el diseño para este fragmento
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
 
         // Inicializar FirebaseAuth y FirebaseStorage
@@ -42,69 +42,59 @@ public class GalleryFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        // Obtener las vistas del layout
+        // Obtener referencias a los elementos de la interfaz
         EditText userNameEditText = root.findViewById(R.id.userNameEditText);
         EditText userEmailEditText = root.findViewById(R.id.userEmailEditText);
         ImageView profileImageView = root.findViewById(R.id.profileImageView);
         Button confirmChangesButton = root.findViewById(R.id.confirmChangesButton);
-        Button selectPhotoButton = root.findViewById(R.id.selectPhotoButton); // Botón para cambiar foto
+        Button selectPhotoButton = root.findViewById(R.id.selectPhotoButton);
 
-        // Obtener el usuario autenticado
+        // Obtener información del usuario autenticado
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            // Mostrar nombre de usuario en el EditText
+            // Mostrar el nombre de usuario en el campo de texto
             String displayName = user.getDisplayName();
-            if (displayName != null && !displayName.isEmpty()) {
-                userNameEditText.setText(displayName);
-            } else {
-                userNameEditText.setText("Nombre de Usuario");
-            }
+            userNameEditText.setText(displayName != null && !displayName.isEmpty() ? displayName : "Nombre de Usuario");
 
-            // Mostrar correo electrónico en el EditText
+            // Mostrar el correo electrónico en el campo de texto
             String email = user.getEmail();
             userEmailEditText.setText(email);
 
-            // Cargar la foto de perfil
+            // Cargar la foto de perfil del usuario usando Picasso
             String photoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;
             if (photoUrl != null) {
-                // Usar Picasso para cargar la foto
                 Picasso.get()
                         .load(photoUrl)
-                        .placeholder(R.drawable.usuario)  // Imagen por defecto mientras carga
+                        .placeholder(R.drawable.usuario)  // Imagen por defecto mientras se carga
                         .error(R.drawable.usuario)  // Imagen en caso de error
                         .into(profileImageView);
             } else {
-                // Imagen predeterminada si no hay foto
-                profileImageView.setImageResource(R.drawable.usuario);
+                profileImageView.setImageResource(R.drawable.usuario); // Imagen predeterminada
             }
 
-            // Configurar el botón para confirmar cambios
+            // Configurar el botón para guardar los cambios
             confirmChangesButton.setOnClickListener(v -> {
-                // Obtener los valores de los campos EditText
                 String newName = userNameEditText.getText().toString();
                 String newEmail = userEmailEditText.getText().toString();
-
-                // Lógica para confirmar los cambios de datos del perfil
                 confirmChanges(user, newName, newEmail);
             });
 
-            // Configurar el botón para seleccionar una nueva foto de perfil
+            // Configurar el botón para seleccionar una nueva foto
             selectPhotoButton.setOnClickListener(v -> {
-                // Intent para abrir la galería y seleccionar una imagen
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
             });
         } else {
-            // Si el usuario no está autenticado, mostrar mensaje de error
+            // Mostrar un mensaje si no hay un usuario autenticado
             Toast.makeText(getActivity(), "No hay usuario autenticado", Toast.LENGTH_SHORT).show();
         }
 
         return root;
     }
 
-    // Método para confirmar los cambios de datos del perfil
+    // Método para actualizar el perfil del usuario
     private void confirmChanges(FirebaseUser user, String newName, String newEmail) {
-        // Actualizar nombre de usuario
+        // Actualizar el nombre de usuario
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(newName)
                 .build();
@@ -112,36 +102,31 @@ public class GalleryFragment extends Fragment {
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Nombre actualizado correctamente
                         Toast.makeText(getActivity(), "Nombre actualizado", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        // Actualizar correo electrónico
+        // Actualizar el correo electrónico
         user.updateEmail(newEmail).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Correo actualizado correctamente
                 Toast.makeText(getActivity(), "Correo actualizado", Toast.LENGTH_SHORT).show();
             } else {
-                // Error al actualizar el correo
                 Toast.makeText(getActivity(), "Error al actualizar correo", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Si hay una nueva foto seleccionada
+        // Subir nueva foto de perfil si se seleccionó
         if (selectedImageUri != null) {
             uploadImageToFirebase(user, selectedImageUri);
         }
     }
 
-    // Método para subir la imagen de perfil a Firebase Storage
+    // Método para subir una imagen al almacenamiento de Firebase
     private void uploadImageToFirebase(FirebaseUser user, Uri imageUri) {
-        // Usa el UID del usuario para crear una ruta única para la imagen
         StorageReference fileReference = storageReference.child("profile_pics/" + user.getUid() + ".jpg");
 
         fileReference.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Actualiza el perfil del usuario con la URL de la imagen
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setPhotoUri(uri)
                             .build();
@@ -155,7 +140,7 @@ public class GalleryFragment extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show());
     }
 
-    // Manejar la selección de imagen desde la galería
+    // Manejar el resultado de la selección de imagen
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -167,4 +152,3 @@ public class GalleryFragment extends Fragment {
         }
     }
 }
-
