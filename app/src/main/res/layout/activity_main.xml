@@ -1,0 +1,78 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1F8A65"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1F8A65"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <!-- Logo -->
+
+        <!-- Título -->
+
+        <!-- Campo de correo -->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="475dp"
+            android:layout_height="364dp"
+            android:layout_marginBottom="24dp"
+            android:background="#1F8A65"
+            android:src="@drawable/logo" />
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Introduce tu correo electrónico"
+            android:inputType="textEmailAddress"
+            android:padding="12dp" />
+
+        <!-- Campo de contraseña -->
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="Introduce tu contraseña"
+            android:inputType="textPassword"
+            android:padding="12dp" />
+
+        <!-- Botón de inicio de sesión -->
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:text="Iniciar Sesión"
+            android:textColor="#1F8A65" />
+
+        <!-- Botón de Google Sign-In -->
+
+        <!-- Enlace a recuperación de contraseña -->
+        <TextView
+            android:id="@+id/forgotPasswordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textColor="@color/white" />
+
+        <!-- Enlace a registro -->
+        <TextView
+            android:id="@+id/registerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿No tienes cuenta? Regístrate aquí."
+            android:textColor="@color/white" />
+    </LinearLayout>
+</ScrollView>
