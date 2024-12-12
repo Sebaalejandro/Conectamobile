@@ -8,20 +8,23 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/chats"
-            android:title="@string/menu_chat" />
+            android:title="@string/menu_chat"
+            android:textColor="#1F8A65"/>
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/agenda"
-            android:title="@string/menu_contacts" />
+            android:title="@string/menu_contacts"
+            android:textColor="#1F8A65"/>
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/usuario"
             android:title="@string/menu_profile"
-             />
+            android:textColor="#1F8A65"/>
 
         <item
             android:id="@+id/nav_cerrarsesion"
             android:icon="@drawable/cerrar"
-            android:title="@string/menu_logout" />
+            android:title="@string/menu_logout"
+            android:textColor="#1F8A65"/>
     </group>
 </menu>

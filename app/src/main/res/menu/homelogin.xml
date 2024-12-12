@@ -4,10 +4,10 @@
     android:background="#1F8A65 ">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        android:background="#1F8A65 "
+        android:background="@color/white"
         android:backgroundTint="#FFFFFF"
+        android:orderInCategory="100"
         android:textColor="#1F8A65"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
